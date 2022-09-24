@@ -168,14 +168,3 @@ exports.findAllSolutions = function(grid, dictionary) {
   finalSolutions = [...thing];
   return finalSolutions;
 }
-
-var grid = [ [ 'V', 'E', 'R', 'Y' ],
-      [ 'A', 'B', 'D', 'D' ],
-      [ 'D', 'E', 'D', 'E' ],
-      [ 'D', 'E', 'D', 'E' ] ];
-var dictionary = ['bee'];
-
-let grid2 = [["A", "Qu"], ["C", "St"]];
-let dict = ["stac"];
-solutions = exports.findAllSolutions(grid2, dict);
-console.log(solutions);
