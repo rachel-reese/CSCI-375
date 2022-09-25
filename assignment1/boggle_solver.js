@@ -15,6 +15,9 @@ class graph {
 function gridToGraph(grid) { 
     let gridGraph = new graph;
     let numbersGrid = []
+    if (!(grid.length)) { 
+      return "empty";
+    }
     rows = grid.length;
     columns = grid[0].length;
 
@@ -114,11 +117,18 @@ function findWord(graph, word, position, currentNode, usedNodes = [], branchNode
             else if (branchNodes.length == 1) { 
               return findWord(graph, word, branchposition, rootNode, usedNodes, branchNodes, branchposition, rootNode);
             }
+            else { 
+              return "not in grid";
+            }
         }
         else if (branchNodes.length == 0 && branchposition != -1){
-          return "not in grid"
-          // usedNodes = [currentNode];
-          // return findWord(graph, word, position - 1, rootNode, [currentNode], branchNodes, position, rootNode);
+          let otherNodes = Object.keys(graph.adjDict).filter(node => graph.adjDict[node][0] == currentLetter);
+          usedNodes.push(currentNode);
+          otherNodes = otherNodes.filter(node => !(usedNodes.includes(node)));
+          if (otherNodes.length > 1) { 
+            return findWord(graph, word, position, otherNodes[0], usedNodes, branchNodes, position, rootNode);
+          }
+          return "not in grid";
         }
         else { 
             return "not in grid";
@@ -174,13 +184,13 @@ exports.findAllSolutions = function(grid, dictionary) {
   return finalSolutions;
 }
 
-var grid = [['t', 'w', 'y', 'r'],
-              ['e', 'n', 'p', 'h'],
-              ['g', 'z', 'qu', 'r'],
-              ['o', 'n', 't', 'a']];
+var grid = [['T', 'W', 'Y', 'R'],
+                ['E', 'N', 'P', 'H'],
+                ['G', 'Z', 'Qu', 'R'],
+                ['St', 'N', 'T', 'A']];
+
 var dictionary = ['art', 'ego', 'gent', 'get', 'net', 'new', 'newt', 'prat',
-                    'pry', 'qua', 'quart', 'quartz', 'rat', 'tar', 'tarp',
-                    'ten', 'went', 'wet', 'arty', 'egg', 'not', 'quar'];
+'pry', 'qua', 'quart', 'quartz', 'rat', 'tar', 'tarp',
+'ten', 'went', 'wet', 'arty', 'egg', 'not', 'quar'];
 
-
-console.log(exports.findAllSolutions(grid, dictionary));
+console.log(exports.findAllSolutions(grid, dictionary ));
