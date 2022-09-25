@@ -21,6 +21,10 @@ function gridToGraph(grid) {
     if (rows == 0 || columns == 0) { 
       return "empty";
     }
+    if (rows != columns) { 
+      return "empty"
+    }
+
     counter = 1;
     for (row in grid) { 
         newRow = [];
@@ -74,27 +78,23 @@ function findWord(graph, word, position, currentNode, usedNodes = [], branchNode
     else { 
         validNodes = Object.keys(graph.adjDict).filter(node => graph.adjDict[node][0] == nextLetter);
     }
-
     if (validNodes.length) { 
-      console.log(currentLetter + "   " + nextLetter);
-      console.log(validNodes);
-      console.log(graph.adjDict[currentNode][1]);
         if (validNodes.length > 1) { 
             if (branchposition == -1) { 
               rootNode = currentNode;
             }
-            if (usedNodes.some(node => node === validNodes[0]))
-            branchRoot = currentNode;
-            branchNodes = validNodes.slice(1);
+            while (usedNodes.some(node => node === validNodes[0])) {
+              branchRoot = currentNode;
+              validNodes = validNodes.slice(1);
+            }
             branchposition = position;
-
+            branchNodes = validNodes;
         }
-
-        if (graph.adjDict[currentNode][1].some(number => number == validNodes[0]) && !(usedNodes.some(node => node === validNodes[0])) || branchNodes[0] == validNodes[0]) {
+        if (graph.adjDict[currentNode][1].some(number => number == validNodes[0]) && !(usedNodes.some(node => node === validNodes[0]))) {
             if (position == word.length - 2) { 
               return word;
             }
-            if (nextLetter.length > 1 && position == word.length - 3) { 
+            if ((nextLetter.length > 1 || currentLetter.length > 1) && position == word.length - 3) { 
                 return word;
             }
             else { 
@@ -105,15 +105,20 @@ function findWord(graph, word, position, currentNode, usedNodes = [], branchNode
                 return findWord(graph, word, position + 1, validNodes[0], usedNodes, branchNodes, branchposition, rootNode);
             }
         }
-        else if (branchNodes.length) {  
-            last = usedNodes.pop();
+        else if (branchNodes.length) {
             usedNodes = usedNodes.slice(0, branchposition + 1); 
-            usedNodes.push(last);
-            return findWord(graph, word, branchposition, currentNode, usedNodes, branchNodes, branchposition, rootNode);
+            usedNodes.push(currentNode);
+            if (graph.adjDict[branchNodes[0]][0] == graph.adjDict[validNodes[0]][0]){
+              return findWord(graph, word, branchposition, currentNode, usedNodes, branchNodes, branchposition, rootNode);
+            }
+            else if (branchNodes.length == 1) { 
+              return findWord(graph, word, branchposition, rootNode, usedNodes, branchNodes, branchposition, rootNode);
+            }
         }
         else if (branchNodes.length == 0 && branchposition != -1){
-          usedNodes = [currentNode];
-          return findWord(graph, word, position - 1, rootNode, [currentNode], branchNodes, position, rootNode);
+          return "not in grid"
+          // usedNodes = [currentNode];
+          // return findWord(graph, word, position - 1, rootNode, [currentNode], branchNodes, position, rootNode);
         }
         else { 
             return "not in grid";
@@ -142,7 +147,6 @@ exports.findAllSolutions = function(grid, dictionary) {
     }
 
     let validNodes = Object.keys(gridGraph.adjDict).filter(node => gridGraph.adjDict[node][0] == firstLetter);
-
     if (validNodes.length) {
       var addWord; 
       if (validNodes.length > 1) { 
@@ -150,6 +154,7 @@ exports.findAllSolutions = function(grid, dictionary) {
           addWord = findWord(gridGraph, currentWord, 0, validNodes[node]);
           if (addWord != "not in grid") {
             solutions.push(currentWord);
+            break;
           }
         }
       }
@@ -168,3 +173,14 @@ exports.findAllSolutions = function(grid, dictionary) {
   finalSolutions = [...thing];
   return finalSolutions;
 }
+
+var grid = [['t', 'w', 'y', 'r'],
+              ['e', 'n', 'p', 'h'],
+              ['g', 'z', 'qu', 'r'],
+              ['o', 'n', 't', 'a']];
+var dictionary = ['art', 'ego', 'gent', 'get', 'net', 'new', 'newt', 'prat',
+                    'pry', 'qua', 'quart', 'quartz', 'rat', 'tar', 'tarp',
+                    'ten', 'went', 'wet', 'arty', 'egg', 'not', 'quar'];
+
+
+console.log(exports.findAllSolutions(grid, dictionary));
