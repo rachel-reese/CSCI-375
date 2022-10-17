@@ -1,0 +1,13 @@
+﻿Code Review
+
+
+Project Description:
+This project is meant to be a solver for the popular board game Boggle. To better explain how the solver works, I will provide a brief overview of the game and its rules: Boggle is a word game in which six-sided dice with letters on each side are arranged on a grid. The object of the game is to find words in the grid using adjacent tiles (horizontal, vertical, and diagonal). These words must be at least three letters, must be contained in the dictionary, and must not use any letter cube more than once in the same word. While Boggle is traditionally played on a 4x4 grid, this solver is able to take grids of any size (as long as they are square). The program consists of a function called findAllSolutions that takes two parameters: a grid and a dictionary. findAllSolutions also makes use of two helper functions: gridToGraph and findWord. gridToGraph converts the grid into a Graph object. The Graph class was created as a way to easily store the letters in the grid along with the letters adjacent to them. findWord is a function that searches for a word in a grid. findAllSolutions calls gridToGraph and repeatedly calls findWord in a loop for each word in the dictionary. Finally, findAllSolutions returns a list of all the words from the dictionary that are contained in the grid. 
+
+
+Defects Found:
+        My partner was not able to find any defects within my code. However, I was able to find formatting errors within my code. Many of my lines were too long. I also noticed that in many places, I did not declare the loop variable.
+
+
+Recommendations:
+        In order to fix these errors, I reformatted my code and shortened the lines. I also changed all of my for loops to include a variable declaration.
